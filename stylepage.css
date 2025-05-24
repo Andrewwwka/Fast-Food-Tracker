@@ -1,0 +1,41 @@
+h1 {
+    text-align: center;
+    border: black groove 3px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif ;
+    background: linear-gradient(to right, red,white, white, white, black);
+ }
+ul{
+    border: black solid 1px;
+    font-family: "Comic Sans MS", Times, serif;
+
+}
+li{
+    margin-bottom: 8px;
+    font-size: large;
+}
+.delete-btn {
+    margin-left: 10px;
+    color: red;
+    cursor: pointer;
+}
+.meal-type{
+    font-style: italic;
+    margin-left: 4px;
+    color: deeppink;
+}
+h2{
+    font-family: Rockwell, "Times New Roman", Times, serif;
+    color: black;
+    font-size: x-large;
+}
+body{
+    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient(white,white, gray,black);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.date{
+    margin-left: 4px;
+    color: plum;
+}
