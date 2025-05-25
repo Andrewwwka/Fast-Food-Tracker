@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="stylepage.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ffcc00">
+  <meta charset="UTF-8">
+  <title>Fast Food Tracker</title>
+</head>
+<body>
+<h1>Fast Food Tracker</h1>
+
+<label for="restaurant">Where did you eat?</label>
+<input type="text" id="restaurant" placeholder="Restaurant name">
+
+<label for="meal">What meal?</label>
+<select id="meal">
+  <option value="Breakfast">Breakfast</option>
+  <option value="Lunch">Lunch</option>
+  <option value="Dinner">Dinner</option>
+  <option value="Dessert">Dessert</option>
+</select>
+
+<label for="date">What date?</label>
+<input type="date" id="date">
+
+<button onclick="addVisit()">Add Visit</button>
+
+<h2>Visit History:</h2>
+<div>
+  <button onclick="sortVisits('restaurant')">Sort by Restaurant</button>
+  <button onclick="sortVisits('meal')">Sort by Meal</button>
+  <button onclick="sortVisits('date')">Sort by Date</button>
+</div>
+<ul id="visitList"></ul>
+
+<script>
+  let visits = [];
+
+  window.onload = function() {
+    const stored = localStorage.getItem('visits');
+    if (stored) {
+      visits = JSON.parse(stored);
+      updateVisitList();
+    }
+  };
+
+  function addVisit() {
+    const restaurantInput = document.getElementById('restaurant');
+    const mealSelect = document.getElementById('meal');
+    const dateInput = document.getElementById('date');
+    const restaurant = restaurantInput.value.trim();
+    const meal = mealSelect.value;
+    const date = dateInput.value;
+
+    if (restaurant) {
+      visits.push({ name: restaurant, meal: meal, date: date });
+      localStorage.setItem('visits', JSON.stringify(visits));
+      updateVisitList();
+      restaurantInput.value = "";
+      dateInput.value = "";
+    }
+  }
+
+  function deleteVisit(index) {
+    visits.splice(index, 1);
+    localStorage.setItem('visits', JSON.stringify(visits));
+    updateVisitList();
+  }
+
+  function formatDate(dateString) {
+    const [year,month, day] = dateString.split('-');
+    return `${parseInt(month)}/${parseInt(day)}/${year}`;
+  }
+
+  function sortVisits(by){
+    if(by === 'restaurant'){
+      visits.sort((a,b) => a.name.localeCompare(b.name));
+    } else if(by === 'meal'){
+      const mealOrder = ['Breakfast', 'Lunch', 'Dinner', 'Dessert'];
+      visits.sort((a,b) => mealOrder.indexOf(a.meal) - mealOrder.indexOf(b.meal));
+    } else if(by === 'date'){
+      visits.sort((a,b) => a.date.localeCompare(b.date));
+    }
+    localStorage.setItem('visits', JSON.stringify(visits));
+    updateVisitList();
+  }
+
+  function updateVisitList() {
+    const list = document.getElementById('visitList');
+    list.innerHTML = "";
+
+    visits.forEach((item, index) => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        ${item.name}
+        <span class="meal-type">(${item.meal})</span>
+        ${item.date ? `<span class="meal-type"> </span>on  <span class="date"> ${formatDate(item.date)}</span>` : ""}
+      `;
+
+      const delBtn = document.createElement('span');
+      delBtn.textContent = ' x';
+      delBtn.className = "delete-btn";
+      delBtn.style.cursor = "pointer";
+      delBtn.style.color = "red";
+      delBtn.onclick = () => deleteVisit(index);
+
+      li.appendChild(delBtn);
+      list.appendChild(li);
+    });
+  }
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js')
+            .then(()=> console.log("Service worker registered"))
+            .catch(err => console.error("SW registration failed:",err))
+  }
+</script>
+</body>
+</html>
