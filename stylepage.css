@@ -43,4 +43,17 @@ body{
     background-repeat: no-repeat;
     background-size: cover;
 }
-
+@media (max-width: 600px){
+    body{
+        font-size: 18px;
+    }
+    h1{
+        font-size: 26px;
+    }
+    li{
+        font-size: 20px;
+    }
+    label,input,select,button{
+        font-size: 18px;
+    }
+}
