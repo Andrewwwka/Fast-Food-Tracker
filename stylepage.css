@@ -2,11 +2,12 @@ h1 {
     text-align: center;
     border: black groove 3px;
     font-family: Verdana, Geneva, Tahoma, sans-serif ;
-    background: linear-gradient(to right, red,white, white, white, black);
+    background: linear-gradient(to right, red,yellow);
  }
 ul{
     border: black solid 1px;
     font-family: "Comic Sans MS", Times, serif;
+
 
 }
 li{
@@ -14,14 +15,21 @@ li{
     font-size: large;
 }
 .delete-btn {
-    margin-left: 10px;
+    margin-left: 8px;
     color: red;
     cursor: pointer;
 }
 .meal-type{
     font-style: italic;
-    margin-left: 4px;
-    color: deeppink;
+    //margin-left: 2px;
+    margin-right: 1px;
+    color: red;
+}
+.date{
+    margin-left: 3px;
+    background:linear-gradient(to right,red, blueviolet, orangered);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 h2{
     font-family: Rockwell, "Times New Roman", Times, serif;
@@ -31,11 +39,8 @@ h2{
 body{
     margin: 0;
     min-height: 100vh;
-    background: linear-gradient(white,white, gray,black);
+    background-color: #D6D6D3;
     background-repeat: no-repeat;
     background-size: cover;
 }
-.date{
-    margin-left: 4px;
-    color: plum;
-}
+
