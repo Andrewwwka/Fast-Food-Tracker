@@ -1,21 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LGZPQQFB0X"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-LGZPQQFB0X');
-  </script>
   <link rel="stylesheet" href="stylepage.css">
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#ffcc00">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="UTF-8">
   <title>Fast Food Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 <h1>Fast Food Tracker</h1>
@@ -64,9 +53,12 @@
     const date = dateInput.value;
 
     if (restaurant) {
-      visits.push({ name: restaurant, meal: meal, date: date });
+      const newVisit = { name: restaurant, meal: meal, date: date };
+      visits.push(newVisit);
       localStorage.setItem('visits', JSON.stringify(visits));
-      updateVisitList();
+
+      appendVisit(newVisit, visits.length - 1);
+
       restaurantInput.value = "";
       dateInput.value = "";
     }
@@ -79,7 +71,8 @@
   }
 
   function formatDate(dateString) {
-    const [year,month, day] = dateString.split('-');
+    if (!dateString) return "";
+    const [year, month, day] = dateString.split('-');
     return `${parseInt(month)}/${parseInt(day)}/${year}`;
   }
 
@@ -102,10 +95,11 @@
 
     visits.forEach((item, index) => {
       const li = document.createElement('li');
+
       li.innerHTML = `
         ${item.name}
         <span class="meal-type">(${item.meal})</span>
-        ${item.date ? `<span class="meal-type"> </span>on  <span class="date"> ${formatDate(item.date)}</span>` : ""}
+        ${item.date ? `<span class="meal-type"> </span>on <span class="date">${formatDate(item.date)}</span>` : ""}
       `;
 
       const delBtn = document.createElement('span');
@@ -113,18 +107,54 @@
       delBtn.className = "delete-btn";
       delBtn.style.cursor = "pointer";
       delBtn.style.color = "red";
-      delBtn.onclick = () => deleteVisit(index);
+      delBtn.onclick = () => {
+        li.classList.add('fade-out');
+        setTimeout(() => {
+          deleteVisit(index);
+        }, 300);
+      };
 
       li.appendChild(delBtn);
       list.appendChild(li);
     });
   }
+
+  function appendVisit(item, index) {
+    const list = document.getElementById('visitList');
+    const li = document.createElement('li');
+
+    li.innerHTML = `
+      ${item.name}
+      <span class="meal-type">(${item.meal})</span>
+      ${item.date ? `<span class="meal-type"> </span>on <span class="date">${formatDate(item.date)}</span>` : ""}
+    `;
+
+    const delBtn = document.createElement('span');
+    delBtn.textContent = ' x';
+    delBtn.className = "delete-btn";
+    delBtn.style.cursor = "pointer";
+    delBtn.style.color = "red";
+    delBtn.onclick = () => {
+      li.classList.add('fade-out');
+      setTimeout(() => {
+        deleteVisit(index);
+      }, 300);
+    };
+
+    li.appendChild(delBtn);
+
+    // Trigger reflow for animation to work
+    void li.offsetWidth;
+    li.classList.add('slide-in-left');
+
+    list.appendChild(li);
+  }
 </script>
 <script>
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('service-worker.js')
-            .then(()=> console.log("Service worker registered"))
-            .catch(err => console.error("SW registration failed:",err))
+            .then(() => console.log("Service worker registered"))
+            .catch(err => console.error("SW registration failed:", err))
   }
 </script>
 </body>
